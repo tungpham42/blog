@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { Modal, Button, Spinner, Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -191,7 +192,7 @@ export default function DockMenu() {
   const handleLogout = useCallback(async () => {
     setLoggingOut(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await signOut(auth); // Use Firebase signOut
       setShowLogoutModal(false);
       console.log("User logged out");
     } catch (error) {

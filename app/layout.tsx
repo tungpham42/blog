@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import { ReactNode } from "react";
 import { DefaultSeo } from "next-seo";
+import DockMenu from "@/components/DockMenu";
 
 <DefaultSeo
   title="Tung Blog"
@@ -39,7 +40,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <DockMenu />
+      </body>
     </html>
   );
 }

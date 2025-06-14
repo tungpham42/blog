@@ -6,6 +6,7 @@ import { Post } from "@/lib/types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { Container, Card, Spinner, Alert } from "react-bootstrap";
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
@@ -34,48 +35,43 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="mt-20 text-center">
-        <div
-          className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent align-[-0.125em]"
-          role="status"
-        />
-        <div className="mt-2 text-gray-600">Loading...</div>
-      </div>
+      <Container className="mt-5 text-center">
+        <Spinner animation="border" variant="primary" />
+        <div className="mt-2 text-muted">Loading...</div>
+      </Container>
     );
   }
 
   if (!post) {
     return (
-      <div className="mt-20 mx-auto max-w-xl px-4">
-        <div className="rounded-md bg-red-100 p-4 text-red-800 border border-red-400">
-          Post not found.
-        </div>
-      </div>
+      <Container className="mt-5" style={{ maxWidth: "32rem" }}>
+        <Alert variant="danger">Post not found.</Alert>
+      </Container>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-tr from-gray-950 via-gray-900 to-gray-800 text-white px-6 py-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-extrabold text-teal-300 mb-2">
-            {post.title}
-          </h1>
-          <p className="text-sm text-gray-400">
+    <Container fluid className="min-vh-100 py-5 gradient-post">
+      <Container className="py-5" style={{ maxWidth: "64rem" }}>
+        <div className="text-center mb-4">
+          <h1 className="display-4 fw-bold text-info mb-2">{post.title}</h1>
+          <p className="text-muted">
             📅 {new Date(post.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <div className="bg-white/5 border border-white/10 backdrop-blur p-6 rounded-xl">
-          <EditorComponent
-            readOnly
-            initialData={
-              typeof post.content === "string"
-                ? JSON.parse(post.content)
-                : post.content
-            }
-          />
-        </div>
-      </div>
-    </main>
+        <Card className="card-transparent">
+          <Card.Body className="p-4">
+            <EditorComponent
+              readOnly
+              initialData={
+                typeof post.content === "string"
+                  ? JSON.parse(post.content)
+                  : post.content
+              }
+            />
+          </Card.Body>
+        </Card>
+      </Container>
+    </Container>
   );
 }

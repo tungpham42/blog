@@ -5,6 +5,7 @@ import { db } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { Post } from "@/lib/types";
 import Link from "next/link";
+import { Container, Card, Spinner, Alert } from "react-bootstrap";
 
 export default function HomePage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -33,42 +34,44 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white p-6">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-extrabold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 animate-fade-in">
+    <Container fluid className="min-vh-100 py-5 gradient-home">
+      <Container className="py-5" style={{ maxWidth: "48rem" }}>
+        <h1 className="text-center mb-5 display-4 fw-bold text-white">
           🚀 TechyTalks
         </h1>
 
         {loading && (
-          <div className="flex justify-center mt-10">
-            <div className="loader border-t-4 border-blue-500 w-10 h-10 rounded-full animate-spin"></div>
+          <div className="text-center mt-5">
+            <Spinner animation="border" variant="primary" />
           </div>
         )}
 
         {error && (
-          <div className="bg-red-500 text-white rounded p-4 text-center mt-4">
+          <Alert variant="danger" className="text-center mt-4">
             {error}
-          </div>
+          </Alert>
         )}
 
         {!loading && !error && posts.length === 0 && (
-          <p className="text-center text-gray-300 mt-6">😢 No posts found.</p>
+          <p className="text-center text-muted mt-4">😢 No posts found.</p>
         )}
 
         {!loading && posts.length > 0 && (
-          <div className="grid gap-4">
+          <div className="d-flex flex-column gap-3">
             {posts.map((post) => (
-              <Link key={post.id} href={`/post/${post.slug}`}>
-                <div className="backdrop-blur-md bg-white/10 border border-white/20 p-4 rounded-xl transition-transform hover:scale-[1.02] hover:shadow-lg cursor-pointer">
-                  <h2 className="text-xl font-semibold text-pink-300 hover:underline">
-                    {post.title}
-                  </h2>
-                </div>
+              <Link key={post.id} href={`/post/${post.slug}`} passHref>
+                <Card className="text-white card-transparent">
+                  <Card.Body>
+                    <Card.Title as="h2" className="text-info">
+                      {post.title}
+                    </Card.Title>
+                  </Card.Body>
+                </Card>
               </Link>
             ))}
           </div>
         )}
-      </div>
-    </main>
+      </Container>
+    </Container>
   );
 }

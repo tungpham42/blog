@@ -1,42 +1,248 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background-color: rgba(255, 255, 255, 0.85);
+  --foreground: #1c2526; /* Darker for contrast */
+  --primary: #40c4ff; /* Vibrant cyan for iOS 26 feel */
+  --secondary: #90a4ae; /* Softer gray for glass effect */
+  --muted: #b0bec5;
+  --border: rgba(255, 255, 255, 0.2);
+  --radius: 1rem; /* Smoother, rounded corners */
+  --blur: blur(12px); /* Frosted glass blur */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background-color: rgba(18, 18, 18, 0.85);
+    --foreground: #f5f7fa; /* Brighter white for better contrast */
+    --primary: #4dd0e1; /* Slightly softer cyan for reduced glare */
+    --secondary: #b0bec5; /* Lighter gray for secondary text */
+    --muted: #d1d9e0; /* Brighter muted tone for subtle text */
+    --border: rgba(255, 255, 255, 0.15);
   }
 }
 
 html,
 body {
-  max-width: 100vw;
+  height: 100%;
+  width: 100%;
   overflow-x: hidden;
-}
-
-body {
+  background-color: transparent;
+  background-image: url("/macOS_Tahoe.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  backdrop-filter: var(--blur);
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600; /* Bolder headings for dark mode readability */
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+p,
+span,
+a,
+label,
+input,
+textarea,
+select,
+button {
+  font-weight: 400; /* Normal weight for body text */
+  opacity: 0.95; /* Slightly reduced opacity for softer appearance */
+}
+
+.text-muted {
+  color: var(--muted) !important;
 }
 
 a {
-  color: inherit;
+  color: var(--primary);
   text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary);
+  text-decoration: none;
+  transform: scale(1.05); /* Subtle zoom for fluidity */
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1.5rem;
+  color: var(--foreground);
+  backdrop-filter: var(--blur);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: background-color 0.4s ease, transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--foreground);
+  backdrop-filter: var(--blur);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 0.2rem rgba(64, 196, 255, 0.3),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
+}
+
+/* Gradient backgrounds with glass effect */
+.gradient-home {
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(15, 12, 41, 0.8),
+    rgba(48, 43, 99, 0.7),
+    rgba(36, 36, 62, 0.8)
+  );
+  backdrop-filter: var(--blur);
+}
+
+.gradient-login {
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(15, 32, 39, 0.8),
+    rgba(32, 58, 67, 0.7),
+    rgba(44, 83, 100, 0.8)
+  );
+  backdrop-filter: var(--blur);
+}
+
+.gradient-edit {
+  background-image: linear-gradient(
+    to bottom left,
+    rgba(26, 32, 44, 0.8),
+    rgba(49, 46, 129, 0.7),
+    rgba(30, 64, 175, 0.8)
+  );
+  backdrop-filter: var(--blur);
+}
+
+.gradient-create {
+  background-image: linear-gradient(
+    to right,
+    rgba(26, 32, 44, 0.8),
+    rgba(76, 29, 149, 0.7),
+    rgba(124, 58, 237, 0.8)
+  );
+  backdrop-filter: var(--blur);
+}
+
+.gradient-post {
+  background-image: linear-gradient(
+    to top right,
+    rgba(10, 10, 10, 0.8),
+    rgba(17, 24, 39, 0.7),
+    rgba(31, 41, 55, 0.8)
+  );
+  backdrop-filter: var(--blur);
+}
+
+/* Card styles */
+.card-transparent {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--blur);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card-transparent:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.card-transparent .card-body {
+  background-color: transparent;
+  color: var(--foreground);
+}
+
+/* Form input styles */
+.form-input-transparent {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  backdrop-filter: var(--blur);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input-transparent:focus {
+  background-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 0.2rem rgba(64, 196, 255, 0.3),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Editor container border */
+.editor-border {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: var(--blur);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

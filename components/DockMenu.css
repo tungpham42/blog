@@ -1,0 +1,93 @@
+.dock-bar {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px) saturate(180%);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  overflow: hidden;
+  max-width: 90vw;
+  width: fit-content;
+  pointer-events: auto;
+  will-change: transform; /* Add this for better performance */
+}
+
+.dock-bar::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.2) 25%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.1) 75%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  animation: shimmer 6s linear infinite;
+  z-index: 0;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  100% {
+    transform: translateX(50%) translateY(50%);
+  }
+}
+
+.dock-list {
+  display: flex;
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  z-index: 1;
+}
+
+.dock-item {
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  position: relative;
+}
+
+.dock-icon,
+.dock-icon-link {
+  color: white;
+  border-radius: 12px;
+  transition: transform 0.3s;
+  text-align: center;
+  padding: 0.6rem;
+}
+
+.dock-icon.active {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .dock-bar {
+    padding: 0.5rem 1rem;
+  }
+
+  .dock-icon {
+    padding: 0.5rem;
+  }
+
+  .dock-list {
+    gap: 0.8rem;
+  }
+}

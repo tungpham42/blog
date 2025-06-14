@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
 import RequireAuth from "@/components/RequireAuth";
+import { Container, Form, Button, Card } from "react-bootstrap";
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
@@ -70,31 +71,34 @@ export default function EditPostPage() {
 
   return (
     <RequireAuth>
-      <main className="min-h-screen bg-gradient-to-bl from-gray-900 via-indigo-900 to-blue-900 text-white p-8">
-        <div className="max-w-3xl mx-auto backdrop-blur-md bg-white/10 border border-white/20 p-8 rounded-xl shadow-lg">
-          <h2 className="text-3xl font-bold mb-6 text-center text-emerald-300">
-            ✏️ Edit Your Post
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <input
-              className="w-full p-3 rounded bg-white/10 border border-white/20 placeholder-gray-300 focus:outline-none"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Title"
-              required
-            />
-            <div className="border border-white/20 rounded p-3">
-              <EditorComponent onChange={setContent} initialData={content} />
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded transition"
-            >
-              💾 Save Changes
-            </button>
-          </form>
-        </div>
-      </main>
+      <Container
+        fluid
+        className="min-vh-100 d-flex align-items-center justify-content-center gradient-edit"
+      >
+        <Card className="w-100 card-transparent" style={{ maxWidth: "48rem" }}>
+          <Card.Body className="p-5">
+            <Card.Title as="h2" className="text-center mb-4 text-success">
+              ✏️ Edit Your Post
+            </Card.Title>
+            <Form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+              <Form.Control
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Title"
+                required
+                className="form-input-transparent"
+              />
+              <div className="editor-border p-3">
+                <EditorComponent onChange={setContent} initialData={content} />
+              </div>
+              <Button type="submit" variant="success" className="w-100">
+                💾 Save Changes
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+      </Container>
     </RequireAuth>
   );
 }

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Tung Blog",
     description: "Blog của Tùng",
     url: "https://blog.soft.io.vn",
-    siteName: "Đối nhân xử thế",
+    siteName: "Tung Blog",
     images: [
       {
         url: "https://blog.soft.io.vn/1200x630.jpg",

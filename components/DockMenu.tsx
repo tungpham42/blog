@@ -6,7 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
-import { Modal, Button, Spinner } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComments,
@@ -80,7 +80,11 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
         disabled={loggingOut}
         className="btn btn-primary"
       >
-        {loggingOut ? <Spinner animation="border" size="sm" /> : "Logout"}
+        {loggingOut ? (
+          <div className="spinner-liquid-glass mx-auto"></div>
+        ) : (
+          "Logout"
+        )}
       </Button>
     </Modal.Footer>
   </Modal>

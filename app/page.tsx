@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { Post } from "@/lib/types";
 import Link from "next/link";
-import { Container, Card, Spinner, Alert } from "react-bootstrap";
+import { Container, Card, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRocket,
@@ -139,7 +139,7 @@ export default function HomePage() {
 
         {loading && posts.length === 0 && (
           <div className="text-center mt-5">
-            <Spinner animation="border" variant="primary" />
+            <div className="spinner-liquid-glass mx-auto"></div>
           </div>
         )}
 
@@ -163,7 +163,7 @@ export default function HomePage() {
 
         {hasMore && loading && posts.length > 0 && (
           <div className="text-center mt-4">
-            <Spinner animation="border" variant="primary" />
+            <div className="spinner-liquid-glass mx-auto"></div>
           </div>
         )}
       </Container>

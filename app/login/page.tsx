@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Container, Card, Button, Spinner, Alert } from "react-bootstrap";
+import { Container, Card, Button, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -46,7 +46,7 @@ export default function LoginPage() {
           </Card.Title>
           {error && <Alert variant="danger">{error}</Alert>}
           {loading ? (
-            <Spinner animation="border" variant="light" />
+            <div className="spinner-liquid-glass mx-auto"></div>
           ) : (
             <Button
               variant="outline-light"

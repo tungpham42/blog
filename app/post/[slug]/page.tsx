@@ -6,7 +6,7 @@ import { Post } from "@/lib/types";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Container, Card, Spinner, Alert } from "react-bootstrap";
+import { Container, Card, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
@@ -38,7 +38,7 @@ export default function BlogPostPage() {
   if (loading) {
     return (
       <Container className="mt-5 text-center">
-        <Spinner animation="border" variant="primary" />
+        <div className="spinner-liquid-glass mx-auto"></div>
         <div
           className="mt-3 text-muted"
           style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}

@@ -134,7 +134,8 @@ export default function HomePage() {
     <Container fluid className="min-vh-100 py-5">
       <Container className="py-5" style={{ maxWidth: "48rem" }}>
         <h1 className="text-center mb-5 display-4 fw-bold">
-          <FontAwesomeIcon icon={faRocket} className="me-2" /> TechyTalks
+          <FontAwesomeIcon icon={faRocket} className="me-2" />
+          TechyTalks
         </h1>
 
         {loading && posts.length === 0 && (

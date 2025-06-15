@@ -62,7 +62,9 @@ h6 {
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: 0.5rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25),
+    0 4px 8px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.4) !important;
 }
 
 p,
@@ -73,6 +75,9 @@ input,
 textarea,
 select,
 button {
+  color: white;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2), 0 2px 4px rgba(0, 0, 0, 0.25),
+    0 4px 8px rgba(0, 0, 0, 0.35), 0 8px 16px rgba(0, 0, 0, 0.4) !important;
   font-family: "Work Sans", sans-serif !important;
   font-weight: 400;
   opacity: 0.97;

@@ -38,14 +38,24 @@
   .ce-toolbar__content .ce-toolbar__plus,
   .ce-toolbar__content .ce-toolbar__settings-btn {
     position: absolute;
-    right: 8px;
+    right: -42px !important;
     background-color: white;
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     color: black !important;
   }
+  .ce-popover .ce-popover__container {
+    position: absolute !important;
+  }
+  .ce-popover-header__text {
+    color: black !important;
+    margin-left: 12px !important;
+  }
   .ce-toolbar__content .ce-toolbar__plus {
     top: -42px !important;
+  }
+  .ce-popover-header__back-button {
+    display: none !important;
   }
   .ce-toolbar__content .ce-toolbar__settings-btn {
     top: 0 !important;

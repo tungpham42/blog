@@ -46,7 +46,7 @@ export default function CreatePostPage() {
         createdAt: Date.now(),
       });
       setError(null);
-      router.push("/");
+      router.push(`/post/${slug}`);
     } catch (err) {
       console.error("Error creating post:", err);
       setError("Failed to create post.");

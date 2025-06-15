@@ -103,7 +103,7 @@ export default function EditPostPage() {
         updatedAt: Date.now(),
       });
       setError(null);
-      router.push("/");
+      router.push(`/post/${slugInput}`);
     } catch (err) {
       console.error("Error updating post:", err);
       setError("Failed to update post.");

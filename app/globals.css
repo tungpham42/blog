@@ -346,3 +346,11 @@ textarea::placeholder {
 .modal-footer {
   border: none !important;
 }
+
+.liquid-glass-card.list-group-item {
+  border-radius: 0 !important;
+}
+
+.list-group {
+  border-radius: 6px !important;
+}

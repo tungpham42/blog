@@ -35,14 +35,15 @@
 
 /* Optional: for small screens */
 @media (max-width: 650px) {
-  .ce-toolbar__plus,
-  .ce-toolbar__settings-btn {
+  .ce-toolbar__content .ce-toolbar__plus,
+  .ce-toolbar__content .ce-toolbar__settings-btn {
     position: absolute;
     right: 8px;
     top: 8px;
     background-color: white;
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    color: black !important;
   }
 
   .ce-toolbar__settings-btn {

@@ -9,6 +9,7 @@ import EmbedImport from "@editorjs/embed";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import Quote from "@editorjs/quote";
+import "@/styles/editor.css";
 
 const ImageTool = ImageToolImport as ToolConstructable;
 const Embed = EmbedImport as ToolConstructable;

@@ -166,7 +166,7 @@ export default function EditPostPage() {
               <div className="d-flex gap-2 mt-3">
                 <Button type="submit" variant="primary" className="w-50">
                   <FontAwesomeIcon icon={faSave} className="me-2" />
-                  Save Changes
+                  Save
                 </Button>
                 <Button
                   variant="danger"
@@ -174,7 +174,7 @@ export default function EditPostPage() {
                   className="w-50"
                 >
                   <FontAwesomeIcon icon={faTrash} className="me-2" />
-                  Delete Post
+                  Delete
                 </Button>
               </div>
             </Form>

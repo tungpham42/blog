@@ -486,16 +486,4 @@ textarea::placeholder {
   .ce-toolbar__settings-btn {
     display: inline-block !important;
   }
-  .ce-toolbar__plus {
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    z-index: 1000;
-  }
-  .ce-toolbar__settings-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 1000;
-  }
 }

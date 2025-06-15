@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Tung Blog - Edit Post",
+  title: "Tung Blog - Chat",
   description: "Blog của Tùng",
   openGraph: {
-    title: "Tung Blog - Edit Post",
+    title: "Tung Blog",
     description: "Blog của Tùng",
-    url: "https://blog.soft.io.vn/edit",
+    url: "https://blog.soft.io.vn/chat",
     siteName: "Tung Blog",
     images: [
       {
@@ -22,6 +22,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EditPostLayout({ children }: { children: ReactNode }) {
+export default function ChatLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }

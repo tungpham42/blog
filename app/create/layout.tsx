@@ -1,17 +1,5 @@
 import type { Metadata } from "next";
 import { ReactNode } from "react";
-import { DefaultSeo } from "next-seo";
-
-<DefaultSeo
-  title="Tung Blog - Create Post"
-  description="Blog của Tùng"
-  openGraph={{
-    type: "website",
-    locale: "en_US",
-    url: "https://blog.soft.io.vn/create",
-    site_name: "Tung Blog",
-  }}
-/>;
 
 export const metadata: Metadata = {
   title: "Tung Blog - Create Post",

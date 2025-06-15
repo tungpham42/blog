@@ -9,12 +9,12 @@
   border-radius: 2rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  z-index: 9999;
+  z-index: 1000;
   overflow: hidden;
   max-width: 90vw;
   width: fit-content;
   pointer-events: auto;
-  will-change: transform; /* Add this for better performance */
+  will-change: transform;
 }
 
 .dock-bar::before {
@@ -60,13 +60,13 @@
 .dock-item {
   display: flex;
   align-items: center;
-  cursor: grab;
+  cursor: pointer;
   position: relative;
 }
 
 .dock-icon,
 .dock-icon-link {
-  color: white;
+  color: var(--foreground);
   border-radius: 12px;
   transition: transform 0.3s;
   text-align: center;
@@ -75,7 +75,7 @@
 
 .dock-icon.active {
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
+  border-radius: 1rem;
 }
 
 @media (max-width: 600px) {
@@ -84,7 +84,11 @@
   }
 
   .dock-icon {
-    padding: 0.5rem;
+    padding: 0.3rem;
+  }
+
+  .dock-icon-link {
+    padding: 0;
   }
 
   .dock-list {

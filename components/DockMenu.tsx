@@ -1,22 +1,25 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
-import { Modal, Button, Spinner, Container } from "react-bootstrap";
+import { Modal, Button, Spinner } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComments,
   faHome,
-  faPlus,
   faSignInAlt,
   faSignOutAlt,
+  faPencil,
+  faCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import "./DockMenu.css";
+import "@/styles/dock.css";
+
+const ADMIN_EMAILS = ["tung.42@gmail.com"];
 
 interface DockIconProps {
   key: string;
@@ -61,15 +64,22 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
   loggingOut,
 }) => (
   <Modal show={show} onHide={onHide} centered>
-    <Modal.Header closeButton>
-      <Modal.Title>Confirm Logout</Modal.Title>
+    <Modal.Header closeButton className="border-0">
+      <Modal.Title className="text-center w-100">Confirm Logout</Modal.Title>
     </Modal.Header>
-    <Modal.Body>Are you sure you want to log out?</Modal.Body>
-    <Modal.Footer>
-      <Button variant="secondary" onClick={onHide}>
+    <Modal.Body className="text-center">
+      Are you sure you want to log out?
+    </Modal.Body>
+    <Modal.Footer className="border-0 justify-content-center">
+      <Button variant="secondary" onClick={onHide} className="btn">
         Cancel
       </Button>
-      <Button variant="danger" onClick={onLogout} disabled={loggingOut}>
+      <Button
+        variant="danger"
+        onClick={onLogout}
+        disabled={loggingOut}
+        className="btn btn-primary"
+      >
         {loggingOut ? <Spinner animation="border" size="sm" /> : "Logout"}
       </Button>
     </Modal.Footer>
@@ -79,13 +89,22 @@ const LogoutModal: React.FC<LogoutModalProps> = ({
 export default function DockMenu() {
   const pathname = usePathname();
   const [user] = useAuthState(auth);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      setIsAdmin(ADMIN_EMAILS.includes(user.email.toLowerCase()));
+    } else {
+      setIsAdmin(false);
+    }
+  }, [user]);
 
   const handleLogout = useCallback(async () => {
     setLoggingOut(true);
     try {
-      await signOut(auth); // Use Firebase signOut
+      await signOut(auth);
       setShowLogoutModal(false);
       console.log("User logged out");
     } catch (error) {
@@ -95,8 +114,24 @@ export default function DockMenu() {
     }
   }, []);
 
+  const isEditRoute = pathname.startsWith("/post/");
+
+  const createEditIconProps = isEditRoute
+    ? {
+        key: "edit",
+        icon: faPencil,
+        path: pathname.replace("/post/", "/edit/"),
+        isActive: pathname.startsWith("/post/"),
+      }
+    : {
+        key: "create",
+        icon: faCirclePlus,
+        path: "/create",
+        isActive: pathname === "/create",
+      };
+
   return (
-    <Container fluid className="position-relative">
+    <div className="position-relative">
       <div className="dock-bar">
         <ul className="dock-list">
           <DockIconComponent
@@ -107,12 +142,7 @@ export default function DockMenu() {
           />
           {user ? (
             <>
-              <DockIconComponent
-                key="create"
-                icon={faPlus}
-                path="/create"
-                isActive={pathname === "/create"}
-              />
+              {isAdmin && <DockIconComponent {...createEditIconProps} />}
               <DockIconComponent
                 key="chat"
                 icon={faComments}
@@ -122,16 +152,24 @@ export default function DockMenu() {
               <DockIconComponent
                 key="logout"
                 icon={faSignOutAlt}
-                action={handleLogout}
+                action={() => setShowLogoutModal(true)}
               />
             </>
           ) : (
-            <DockIconComponent
-              key="login"
-              icon={faSignInAlt}
-              path="/login"
-              isActive={pathname === "/login"}
-            />
+            <>
+              <DockIconComponent
+                key="chat"
+                icon={faComments}
+                path="/chat"
+                isActive={pathname === "/chat"}
+              />
+              <DockIconComponent
+                key="login"
+                icon={faSignInAlt}
+                path="/login"
+                isActive={pathname === "/login"}
+              />
+            </>
           )}
         </ul>
       </div>
@@ -141,6 +179,6 @@ export default function DockMenu() {
         onLogout={handleLogout}
         loggingOut={loggingOut}
       />
-    </Container>
+    </div>
   );
 }

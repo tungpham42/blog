@@ -14,8 +14,10 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
-import RequireAuth from "@/components/RequireAuth";
 import { Container, Form, Button, Card } from "react-bootstrap";
+import RequireAuthAdmin from "@/components/RequireAuthAdmin";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt, faSave } from "@fortawesome/free-solid-svg-icons";
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
@@ -70,35 +72,39 @@ export default function EditPostPage() {
   };
 
   return (
-    <RequireAuth>
+    <RequireAuthAdmin>
       <Container
         fluid
-        className="min-vh-100 d-flex align-items-center justify-content-center gradient-edit"
+        className="min-vh-100 d-flex align-items-center justify-content-center my-5"
       >
-        <Card className="w-100 card-transparent" style={{ maxWidth: "48rem" }}>
-          <Card.Body className="p-5">
-            <Card.Title as="h2" className="text-center mb-4 text-success">
-              ✏️ Edit Your Post
+        <Card
+          className="w-100 liquid-glass-card gradient-edit"
+          style={{ maxWidth: "48rem" }}
+        >
+          <Card.Body className="p-4">
+            <Card.Title as="h2" className="text-center mb-4">
+              <FontAwesomeIcon icon={faPencilAlt} className="me-2" /> Edit Your
+              Post
             </Card.Title>
-            <Form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+            <Form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
               <Form.Control
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
                 required
-                className="form-input-transparent"
+                className="mt-3 form-input-transparent"
               />
-              <div className="editor-border p-3">
+              <div className="editor-border mt-3 p-4">
                 <EditorComponent onChange={setContent} initialData={content} />
               </div>
-              <Button type="submit" variant="success" className="w-100">
-                💾 Save Changes
+              <Button type="submit" variant="primary" className="mt-3 w-100">
+                <FontAwesomeIcon icon={faSave} className="me-2" /> Save Changes
               </Button>
             </Form>
           </Card.Body>
         </Card>
       </Container>
-    </RequireAuth>
+    </RequireAuthAdmin>
   );
 }

@@ -7,6 +7,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Container, Card, Spinner, Alert } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
@@ -37,7 +39,12 @@ export default function BlogPostPage() {
     return (
       <Container className="mt-5 text-center">
         <Spinner animation="border" variant="primary" />
-        <div className="mt-2 text-muted">Loading...</div>
+        <div
+          className="mt-3 text-muted"
+          style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
+        >
+          Loading...
+        </div>
       </Container>
     );
   }
@@ -45,22 +52,28 @@ export default function BlogPostPage() {
   if (!post) {
     return (
       <Container className="mt-5" style={{ maxWidth: "32rem" }}>
-        <Alert variant="danger">Post not found.</Alert>
+        <Alert variant="danger" className="liquid-glass-card">
+          Post not found.
+        </Alert>
       </Container>
     );
   }
 
   return (
-    <Container fluid className="min-vh-100 py-5 gradient-post">
+    <Container fluid className="min-vh-100 py-5 my-5">
       <Container className="py-5" style={{ maxWidth: "64rem" }}>
-        <div className="text-center mb-4">
-          <h1 className="display-4 fw-bold text-info mb-2">{post.title}</h1>
-          <p className="text-muted">
-            📅 {new Date(post.createdAt).toLocaleDateString()}
+        <div className="text-center mb-5">
+          <h1 className="display-4 fw-bold mb-3">{post.title}</h1>
+          <p
+            className="text-muted"
+            style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
+          >
+            <FontAwesomeIcon icon={faCalendarAlt} className="me-2" />
+            {new Date(post.createdAt).toLocaleDateString("vi-VN")}
           </p>
         </div>
-        <Card className="card-transparent">
-          <Card.Body className="p-4">
+        <Card className="liquid-glass-card gradient-post">
+          <Card.Body className="p-5">
             <EditorComponent
               readOnly
               initialData={

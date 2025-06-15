@@ -11,7 +11,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
@@ -63,8 +63,6 @@ export default function EditPostPage() {
     };
     fetchPost();
   }, [slug, router]);
-
-  const memoizedContent = useMemo(() => content, [content]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,10 +156,7 @@ export default function EditPostPage() {
                 className="editor-border mt-3 p-4"
                 style={{ minHeight: "300px" }}
               >
-                <EditorComponent
-                  onChange={setContent}
-                  initialData={memoizedContent}
-                />
+                <EditorComponent onChange={setContent} initialData={content} />
               </div>
               <div className="d-flex gap-2 mt-3">
                 <Button type="submit" variant="primary" className="w-50">

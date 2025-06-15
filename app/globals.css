@@ -399,3 +399,81 @@ textarea::placeholder {
     transform: rotate(360deg);
   }
 }
+
+.editorContainer {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Custom styles to override EditorJS default 650px max width */
+#editorjs {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 1rem; /* Optional: adds some horizontal spacing */
+  box-sizing: border-box;
+}
+
+/* Override inner block styling if necessary */
+.ce-block {
+  max-width: 100% !important;
+}
+
+.ce-toolbar__content,
+.ce-block__content {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Ensure toolbar buttons are visible and positioned correctly */
+.ce-toolbar__plus,
+.ce-toolbar__settings-btn {
+  position: relative;
+  z-index: 10;
+  transform: scale(0.9); /* Optional: make it a bit smaller */
+  margin: 0 4px;
+}
+
+/* Optional: for small screens */
+@media (max-width: 650px) {
+  .ce-toolbar__content .ce-toolbar__plus,
+  .ce-toolbar__content .ce-toolbar__settings-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    color: black !important;
+  }
+
+  .ce-toolbar__settings-btn {
+    right: 40px;
+  }
+}
+
+/* Allow horizontal scroll if needed */
+.ce-block {
+  overflow-x: auto;
+  position: relative;
+}
+
+/* Add enough padding to the editor to avoid layout breaking */
+#editorjs {
+  padding-bottom: 3rem; /* space for floating toolbar buttons */
+}
+
+.ce-block__content,
+.ce-toolbar__content,
+.codex-editor__redactor {
+  max-width: unset !important; /* or set to desired value, e.g., 100% */
+}
+.cdx-block {
+  max-width: 100% !important;
+}
+@media screen and (max-width: 650px) {
+  .ce-paragraph[data-placeholder]:empty::before {
+    opacity: 1 !important; /* Adjust placeholder behavior */
+  }
+}

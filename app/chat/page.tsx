@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useState, useEffect } from "react";
-import RequireAuth from "@/components/RequireAuth";
+import { useRouter } from "next/navigation";
 import {
   Container,
   Form,
@@ -40,6 +40,7 @@ export default function ChatPage() {
   const [user] = useAuthState(auth);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (user?.email) {
@@ -78,7 +79,14 @@ export default function ChatPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim()) return alert("Please write a message.");
+    if (!user) {
+      router.push("/login"); // Redirect to login page if not authenticated
+      return;
+    }
+    if (!message.trim()) {
+      setError("Please write a message.");
+      return;
+    }
 
     try {
       await addDoc(collection(db, "messages"), {
@@ -96,7 +104,10 @@ export default function ChatPage() {
   };
 
   const handleDelete = async (messageId: string) => {
-    if (!isAdmin) return alert("You are not authorized to delete messages.");
+    if (!isAdmin) {
+      setError("You are not authorized to delete messages.");
+      return;
+    }
 
     try {
       await deleteDoc(doc(db, "messages", messageId));
@@ -108,48 +119,48 @@ export default function ChatPage() {
   };
 
   return (
-    <RequireAuth>
-      <Container
-        fluid
-        className="min-vh-100 d-flex align-items-center justify-content-center my-5"
+    <Container
+      fluid
+      className="min-vh-100 d-flex align-items-center justify-content-center my-5"
+    >
+      <Card
+        className="w-100 liquid-glass-card gradient-chat"
+        style={{ maxWidth: "48rem" }}
       >
-        <Card
-          className="w-100 liquid-glass-card gradient-chat"
-          style={{ maxWidth: "48rem" }}
-        >
-          <Card.Body className="p-3">
-            <Card.Title as="h2" className="text-center mb-4">
-              <FontAwesomeIcon icon={faComments} className="me-2" /> Chat Room
-            </Card.Title>
-            {error && <Alert variant="danger">{error}</Alert>}
-            <ListGroup
-              className="mb-4"
-              style={{ maxHeight: "400px", overflowY: "auto" }}
-            >
-              {messages.map((msg) => (
-                <ListGroup.Item
-                  key={msg.id}
-                  className="d-flex justify-content-between align-items-start liquid-glass-card"
-                >
-                  <div>
-                    <strong>{msg.userEmail}:</strong> {msg.text}
-                    <small className="text-muted d-block">
-                      {new Date(msg.createdAt).toLocaleString("vi-VN")}
-                    </small>
-                  </div>
-                  {isAdmin && (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleDelete(msg.id)}
-                      className="ms-2"
-                    >
-                      Delete
-                    </Button>
-                  )}
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+        <Card.Body className="p-3">
+          <Card.Title as="h2" className="text-center mb-4">
+            <FontAwesomeIcon icon={faComments} className="me-2" /> Chat Room
+          </Card.Title>
+          {error && <Alert variant="danger">{error}</Alert>}
+          <ListGroup
+            className="mb-4"
+            style={{ maxHeight: "400px", overflowY: "auto" }}
+          >
+            {messages.map((msg) => (
+              <ListGroup.Item
+                key={msg.id}
+                className="d-flex justify-content-between align-items-start liquid-glass-card"
+              >
+                <div>
+                  <strong>{msg.userEmail}:</strong> {msg.text}
+                  <small className="text-muted d-block">
+                    {new Date(msg.createdAt).toLocaleString("vi-VN")}
+                  </small>
+                </div>
+                {isAdmin && (
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDelete(msg.id)}
+                    className="ms-2"
+                  >
+                    Delete
+                  </Button>
+                )}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+          {user ? (
             <Form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
               <Form.Control
                 type="text"
@@ -164,9 +175,13 @@ export default function ChatPage() {
                 Message
               </Button>
             </Form>
-          </Card.Body>
-        </Card>
-      </Container>
-    </RequireAuth>
+          ) : (
+            <Alert variant="info">
+              Please <a href="/login">log in</a> to send a message.
+            </Alert>
+          )}
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }

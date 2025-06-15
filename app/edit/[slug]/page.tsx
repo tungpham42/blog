@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
-import { Container, Form, Button, Card, Modal } from "react-bootstrap";
+import { Container, Form, Button, Card, Modal, Alert } from "react-bootstrap";
 import RequireAuthAdmin from "@/components/RequireAuthAdmin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,20 +35,26 @@ export default function EditPostPage() {
   const [content, setContent] = useState<OutputData | null>(null);
   const [docId, setDocId] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPost = async () => {
-      const q = query(collection(db, "posts"), where("slug", "==", slug));
-      const querySnapshot = await getDocs(q);
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        const data = doc.data();
-        setDocId(doc.id);
-        setTitle(data.title);
-        setContent(data.content);
-      } else {
-        alert("Post not found.");
-        router.push("/");
+      try {
+        const q = query(collection(db, "posts"), where("slug", "==", slug));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          const data = doc.data();
+          setDocId(doc.id);
+          setTitle(data.title);
+          setContent(data.content);
+        } else {
+          setError("Post not found.");
+          router.push("/");
+        }
+      } catch (err) {
+        console.error("Error fetching post:", err);
+        setError("Failed to load post.");
       }
     };
     fetchPost();
@@ -56,25 +62,33 @@ export default function EditPostPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content) return alert("Content is required.");
+    if (!content) {
+      setError("Content is required.");
+      return;
+    }
 
     const newSlug = slugify(title);
     const q = query(collection(db, "posts"), where("slug", "==", newSlug));
     const querySnapshot = await getDocs(q);
     const slugExists = querySnapshot.docs.some((doc) => doc.id !== docId);
     if (slugExists) {
-      alert("A post with this title already exists.");
+      setError("A post with this title already exists.");
       return;
     }
 
-    await updateDoc(doc(db, "posts", docId), {
-      title,
-      slug: newSlug,
-      content,
-      updatedAt: Date.now(),
-    });
-
-    router.push("/");
+    try {
+      await updateDoc(doc(db, "posts", docId), {
+        title,
+        slug: newSlug,
+        content,
+        updatedAt: Date.now(),
+      });
+      setError(null);
+      router.push("/");
+    } catch (err) {
+      console.error("Error updating post:", err);
+      setError("Failed to update post.");
+    }
   };
 
   const handleDeleteClick = () => {
@@ -82,9 +96,16 @@ export default function EditPostPage() {
   };
 
   const handleDeleteConfirm = async () => {
-    await deleteDoc(doc(db, "posts", docId));
-    setShowDeleteModal(false);
-    router.push("/");
+    try {
+      await deleteDoc(doc(db, "posts", docId));
+      setShowDeleteModal(false);
+      setError(null);
+      router.push("/");
+    } catch (err) {
+      console.error("Error deleting post:", err);
+      setError("Failed to delete post.");
+      setShowDeleteModal(false);
+    }
   };
 
   const handleCloseModal = () => {
@@ -106,6 +127,7 @@ export default function EditPostPage() {
               <FontAwesomeIcon icon={faPencilAlt} className="me-2" /> Edit Your
               Post
             </Card.Title>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
               <Form.Control
                 type="text"

@@ -7,7 +7,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
-import { Container, Form, Button, Card } from "react-bootstrap";
+import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import RequireAuthAdmin from "@/components/RequireAuthAdmin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faRocket } from "@fortawesome/free-solid-svg-icons";
@@ -20,27 +20,37 @@ export default function CreatePostPage() {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState<OutputData | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content) return alert("Please write some content.");
+    if (!content) {
+      setError("Please write some content.");
+      return;
+    }
 
     const postsRef = collection(db, "posts");
     const slugQuery = query(postsRef, where("slug", "==", slug));
     const querySnapshot = await getDocs(slugQuery);
     if (!querySnapshot.empty) {
-      alert("Slug already exists. Choose another title.");
+      setError("Slug already exists. Choose another title.");
       return;
     }
 
-    await addDoc(postsRef, {
-      title,
-      slug,
-      content,
-      createdAt: Date.now(),
-    });
-    router.push("/");
+    try {
+      await addDoc(postsRef, {
+        title,
+        slug,
+        content,
+        createdAt: Date.now(),
+      });
+      setError(null);
+      router.push("/");
+    } catch (err) {
+      console.error("Error creating post:", err);
+      setError("Failed to create post.");
+    }
   };
 
   return (
@@ -58,6 +68,7 @@ export default function CreatePostPage() {
               <FontAwesomeIcon icon={faPencilAlt} className="me-2" /> Create
               Something Awesome
             </Card.Title>
+            {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
               <Form.Control
                 type="text"

@@ -257,14 +257,15 @@ select:focus {
 }
 
 .liquid-glass-card,
-.modal-content {
-  background-color: rgba(255, 255, 255, 0.12);
-  border: 1px solid var(--border);
+.modal-content,
+.alert {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid var(--border) !important;
   backdrop-filter: var(--blur) saturate(180%) !important;
   -webkit-backdrop-filter: var(--blur) saturate(180%) !important;
-  border-radius: var(--radius);
+  border-radius: var(--radius) !important;
   color: var(--foreground);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
 }
 
 .btn {
@@ -351,6 +352,16 @@ textarea::placeholder {
   border-radius: 0 !important;
 }
 
+.liquid-glass-card.list-group-item:first-child {
+  border-top-left-radius: var(--radius) !important;
+  border-top-right-radius: var(--radius) !important;
+}
+
+.liquid-glass-card.list-group-item:last-child {
+  border-bottom-left-radius: var(--radius) !important;
+  border-bottom-right-radius: var(--radius) !important;
+}
+
 .list-group {
-  border-radius: 6px !important;
+  border-radius: var(--radius) !important;
 }

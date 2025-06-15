@@ -2,10 +2,10 @@
 
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "@/lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Container, Card, Button, Spinner } from "react-bootstrap";
+import { Container, Card, Button, Spinner, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +14,7 @@ import "@/styles/login.css";
 export default function LoginPage() {
   const router = useRouter();
   const [user, loading] = useAuthState(auth);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && user) {
@@ -25,10 +26,11 @@ export default function LoginPage() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
+      setError(null);
       router.push("/");
     } catch (err) {
       console.error(err);
-      alert("Login failed. Please try again.");
+      setError("Login failed. Please try again.");
     }
   };
 
@@ -42,6 +44,7 @@ export default function LoginPage() {
           <Card.Title as="h2" className="mb-4 fw-bold">
             Welcome Back <FontAwesomeIcon icon={faHeart} className="ms-2" />
           </Card.Title>
+          {error && <Alert variant="danger">{error}</Alert>}
           {loading ? (
             <Spinner animation="border" variant="light" />
           ) : (

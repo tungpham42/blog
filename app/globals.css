@@ -341,3 +341,8 @@ textarea::placeholder {
 .ce-toolbar__settings-btn:hover {
   color: black !important;
 }
+
+.modal-header,
+.modal-footer {
+  border: none !important;
+}

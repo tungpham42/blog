@@ -22,6 +22,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "bootstrap": "^5.3.6",
+    "editorjs-undo": "^2.0.28",
     "firebase": "^11.9.1",
     "framer-motion": "^12.18.1",
     "next": "^15.3.3",

@@ -8,16 +8,21 @@ import {
   getDocs,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
-import { Container, Form, Button, Card } from "react-bootstrap";
+import { Container, Form, Button, Card, Modal } from "react-bootstrap";
 import RequireAuthAdmin from "@/components/RequireAuthAdmin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt, faSave } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPencilAlt,
+  faSave,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
@@ -29,6 +34,7 @@ export default function EditPostPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState<OutputData | null>(null);
   const [docId, setDocId] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -71,6 +77,20 @@ export default function EditPostPage() {
     router.push("/");
   };
 
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    await deleteDoc(doc(db, "posts", docId));
+    setShowDeleteModal(false);
+    router.push("/");
+  };
+
+  const handleCloseModal = () => {
+    setShowDeleteModal(false);
+  };
+
   return (
     <RequireAuthAdmin>
       <Container
@@ -98,13 +118,42 @@ export default function EditPostPage() {
               <div className="editor-border mt-3 p-4">
                 <EditorComponent onChange={setContent} initialData={content} />
               </div>
-              <Button type="submit" variant="primary" className="mt-3 w-100">
-                <FontAwesomeIcon icon={faSave} className="me-2" /> Save Changes
-              </Button>
+              <div className="d-flex gap-2 mt-3">
+                <Button type="submit" variant="primary" className="w-50">
+                  <FontAwesomeIcon icon={faSave} className="me-2" />
+                  Save Changes
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={handleDeleteClick}
+                  className="w-50"
+                >
+                  <FontAwesomeIcon icon={faTrash} className="me-2" />
+                  Delete Post
+                </Button>
+              </div>
             </Form>
           </Card.Body>
         </Card>
       </Container>
+
+      <Modal show={showDeleteModal} onHide={handleCloseModal} centered>
+        <Modal.Header>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this post? This action cannot be
+          undone.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteConfirm}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </RequireAuthAdmin>
   );
 }

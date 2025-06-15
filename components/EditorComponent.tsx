@@ -15,7 +15,7 @@ const Embed = EmbedImport as ToolConstructable;
 const RawTool = RawToolImport as ToolConstructable;
 
 type EditorComponentProps = {
-  onChange?: (data: OutputData) => void; // make optional
+  onChange?: (data: OutputData) => void;
   initialData?: OutputData | null;
   readOnly?: boolean;
 };
@@ -64,12 +64,41 @@ export default function EditorComponent({
       });
 
       editorRef.current = editor;
-    }
 
-    return () => {
-      editorRef.current?.destroy();
-      editorRef.current = null;
-    };
+      // Add keyboard shortcuts
+      const handleKeyDown = (event: KeyboardEvent) => {
+        if (readOnly) return;
+
+        // Cut: Ctrl+X or Cmd+X
+        if ((event.ctrlKey || event.metaKey) && event.key === "x") {
+          event.preventDefault();
+          document.execCommand("cut");
+        }
+
+        // Copy: Ctrl+C or Cmd+C
+        if ((event.ctrlKey || event.metaKey) && event.key === "c") {
+          event.preventDefault();
+          document.execCommand("copy");
+        }
+
+        // Paste: Ctrl+V or Cmd+V
+        if ((event.ctrlKey || event.metaKey) && event.key === "v") {
+          event.preventDefault();
+          document.execCommand("paste");
+        }
+      };
+
+      // Attach keyboard event listener
+      const editorElement = document.getElementById("editorjs");
+      editorElement?.addEventListener("keydown", handleKeyDown);
+
+      // Cleanup event listener
+      return () => {
+        editorElement?.removeEventListener("keydown", handleKeyDown);
+        editorRef.current?.destroy();
+        editorRef.current = null;
+      };
+    }
   }, [initialData, onChange, readOnly]);
 
   return <div id="editorjs" />;

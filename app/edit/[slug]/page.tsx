@@ -26,7 +26,7 @@ import {
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
-  loading: () => <div style={{ minHeight: "300px" }}>Loading editor...</div>,
+  loading: () => <div className="spinner-liquid-glass mx-auto"></div>,
 });
 
 export default function EditPostPage() {
@@ -124,7 +124,7 @@ export default function EditPostPage() {
         fluid
         className="min-vh-100 d-flex align-items-center justify-content-center my-5"
       >
-        <div>Loading...</div>
+        <div className="spinner-liquid-glass mx-auto"></div>
       </Container>
     );
   }

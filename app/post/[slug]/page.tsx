@@ -39,12 +39,6 @@ export default function BlogPostPage() {
     return (
       <Container className="mt-5 text-center">
         <div className="spinner-liquid-glass mx-auto"></div>
-        <div
-          className="mt-3 text-muted"
-          style={{ textShadow: "0 1px 2px rgba(0, 0, 0, 0.3)" }}
-        >
-          Loading...
-        </div>
       </Container>
     );
   }

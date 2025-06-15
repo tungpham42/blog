@@ -15,7 +15,6 @@ import Link from "next/link";
 import { Container, Card, Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faRocket,
   faSadTear,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
@@ -133,10 +132,7 @@ export default function HomePage() {
   return (
     <Container fluid className="min-vh-100 py-5">
       <Container className="py-5" style={{ maxWidth: "48rem" }}>
-        <h1 className="text-center mb-5 display-4 fw-bold">
-          <FontAwesomeIcon icon={faRocket} className="me-2" />
-          TechyTalks
-        </h1>
+        <h1 className="text-center mb-5 display-4 fw-bold">Techy Talks</h1>
 
         {loading && posts.length === 0 && (
           <div className="text-center mt-5">

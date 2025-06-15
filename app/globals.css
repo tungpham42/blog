@@ -365,3 +365,13 @@ textarea::placeholder {
 .list-group {
   border-radius: var(--radius) !important;
 }
+
+.editor-border {
+  transition: opacity 0.3s ease-in-out;
+  min-height: 300px;
+}
+
+#editorjs {
+  min-height: 300px;
+  transition: opacity 0.3s ease-in-out;
+}

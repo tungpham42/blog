@@ -69,8 +69,8 @@ export default function EditorComponent({
     return () => {
       editorRef.current?.destroy();
       editorRef.current = null;
-    };
-  }, [initialData, onChange, readOnly]);
+    }; // eslint-disable-next-line
+  }, []);
 
   return <div id="editorjs" />;
 }

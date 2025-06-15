@@ -11,7 +11,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { OutputData } from "@editorjs/editorjs";
 import slugify from "@/utils/slug";
@@ -26,6 +26,7 @@ import {
 
 const EditorComponent = dynamic(() => import("@/components/EditorComponent"), {
   ssr: false,
+  loading: () => <div style={{ minHeight: "300px" }}>Loading editor...</div>,
 });
 
 export default function EditPostPage() {
@@ -36,6 +37,7 @@ export default function EditPostPage() {
   const [docId, setDocId] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -55,10 +57,14 @@ export default function EditPostPage() {
       } catch (err) {
         console.error("Error fetching post:", err);
         setError("Failed to load post.");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchPost();
   }, [slug, router]);
+
+  const memoizedContent = useMemo(() => content, [content]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,6 +118,17 @@ export default function EditPostPage() {
     setShowDeleteModal(false);
   };
 
+  if (isLoading) {
+    return (
+      <Container
+        fluid
+        className="min-vh-100 d-flex align-items-center justify-content-center my-5"
+      >
+        <div>Loading...</div>
+      </Container>
+    );
+  }
+
   return (
     <RequireAuthAdmin>
       <Container
@@ -137,8 +154,14 @@ export default function EditPostPage() {
                 required
                 className="mt-3 form-input-transparent"
               />
-              <div className="editor-border mt-3 p-4">
-                <EditorComponent onChange={setContent} initialData={content} />
+              <div
+                className="editor-border mt-3 p-4"
+                style={{ minHeight: "300px" }}
+              >
+                <EditorComponent
+                  onChange={setContent}
+                  initialData={memoizedContent}
+                />
               </div>
               <div className="d-flex gap-2 mt-3">
                 <Button type="submit" variant="primary" className="w-50">

@@ -168,7 +168,7 @@ export default function EditPostPage() {
                 }}
                 placeholder="Title"
                 required
-                className="mt-3 form-input-transparent"
+                className="mt-0 form-input-transparent"
               />
               <Form.Control
                 type="text"
@@ -176,15 +176,15 @@ export default function EditPostPage() {
                 onChange={(e) => setSlugInput(e.target.value)}
                 placeholder="Slug"
                 required
-                className="mt-3 form-input-transparent"
+                className="mt-0 form-input-transparent"
               />
               <div
-                className="editor-border mt-3 p-4"
+                className="editor-border mt-0 p-4"
                 style={{ minHeight: "300px" }}
               >
                 <EditorComponent onChange={setContent} initialData={content} />
               </div>
-              <div className="d-flex gap-2 mt-3">
+              <div className="d-flex gap-2 mt-0">
                 <Button type="submit" variant="primary" className="w-50">
                   <FontAwesomeIcon icon={faSave} className="me-2" />
                   Save

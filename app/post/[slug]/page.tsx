@@ -54,7 +54,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <Container fluid className="min-vh-100 py-5 my-5">
+    <Container fluid className="min-vh-100 py-0 my-0">
       <Container className="py-5" style={{ maxWidth: "64rem" }}>
         <div className="text-center mb-5">
           <h1 className="display-4 fw-bold mb-3">{post.title}</h1>

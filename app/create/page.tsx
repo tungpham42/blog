@@ -88,12 +88,12 @@ export default function CreatePostPage() {
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="Slug"
                 required
-                className="mt-3 form-input-transparent"
+                className="mt-0 form-input-transparent"
               />
-              <div className="editor-border mt-3 p-4">
+              <div className="editor-border mt-0 p-4">
                 <EditorComponent onChange={setContent} />
               </div>
-              <Button type="submit" variant="primary" className="mt-3 w-100">
+              <Button type="submit" variant="primary" className="mt-0 w-100">
                 <FontAwesomeIcon icon={faRocket} className="me-2" /> Publish
                 Post
               </Button>

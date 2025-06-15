@@ -285,19 +285,15 @@ select:focus {
   border: 1px solid var(--border) !important;
   backdrop-filter: var(--blur) saturate(180%) !important;
   -webkit-backdrop-filter: var(--blur) saturate(180%) !important;
-  border-radius: var(--radius);
+  border-radius: var(--radius) !important;
   color: var(--foreground);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
-}
-
-.alert {
-  border-radius: 8px !important;
 }
 
 .btn {
   background-color: rgba(255, 255, 255, 0.12);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 0.75rem 1.5rem;
   color: var(--foreground);
   backdrop-filter: var(--blur) saturate(180%) !important;

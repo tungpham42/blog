@@ -73,7 +73,11 @@ export default function EditorComponent({
     }; // eslint-disable-next-line
   }, []);
 
-  return <div id="editorjs" />;
+  return (
+    <div className="editor-wrapper">
+      <div id="editorjs" />
+    </div>
+  );
 }
 
 // Upload file to Cloudinary

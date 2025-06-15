@@ -46,6 +46,7 @@
   }
   .ce-popover .ce-popover__container {
     position: absolute !important;
+    margin-bottom: -280px !important;
   }
   .ce-popover-header__text {
     color: black !important;

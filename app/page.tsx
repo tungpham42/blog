@@ -33,7 +33,7 @@ const PostList = memo(
       {posts.map((post, index) => (
         <Link key={post.id} href={`/post/${post.slug}`} passHref>
           <Card
-            className="liquid-glass-card"
+            className="liquid-glass-card gradient-home"
             ref={index === posts.length - 1 ? lastPostElementRef : null}
           >
             <Card.Body>

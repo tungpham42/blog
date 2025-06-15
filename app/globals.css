@@ -1,20 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 
 :root {
-  --background-color: rgba(240, 240, 240, 0.15); /* Slightly more opaque */
-  --foreground: #f5faff; /* Brighter off-white for better contrast */
-  --primary: #66d9ff; /* Vibrant cyan */
-  --secondary: #a3bffa; /* Muted blue */
-  --muted: #c3d7e3; /* Subtle gray-blue */
-  --border: rgba(255, 255, 255, 0.3); /* Stronger border */
+  --background-color: rgba(240, 240, 240, 0.15);
+  --foreground: #f5faff;
+  --primary: #66d9ff;
+  --secondary: #a3bffa;
+  --muted: #c3d7e3;
+  --border: rgba(255, 255, 255, 0.3);
   --radius: 1rem;
   --blur: blur(14px);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-color: rgba(30, 30, 30, 0.15); /* Slightly more opaque */
-    --foreground: #fafcff; /* Even brighter for dark theme */
+    --background-color: rgba(30, 30, 30, 0.15);
+    --foreground: #fafcff;
     --primary: #4cc1fc;
     --secondary: #90cdf4;
     --muted: #b7c7d1;
@@ -62,7 +62,7 @@ h6 {
   font-weight: 600;
   color: var(--foreground);
   margin-bottom: 0.5rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 p,
@@ -75,7 +75,7 @@ select,
 button {
   font-family: "Work Sans", sans-serif !important;
   font-weight: 400;
-  opacity: 0.97; /* Slightly more opaque */
+  opacity: 0.97;
 }
 
 a {
@@ -103,7 +103,7 @@ canvas {
 button {
   font: inherit;
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.12); /* More opaque */
+  background-color: rgba(255, 255, 255, 0.12);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 0.75rem 1.5rem;
@@ -400,6 +400,7 @@ textarea::placeholder {
   }
 }
 
+/* EditorJS Custom Styles */
 .editorContainer {
   max-width: 100% !important;
   width: 100% !important;
@@ -407,15 +408,13 @@ textarea::placeholder {
   box-sizing: border-box;
 }
 
-/* Custom styles to override EditorJS default 650px max width */
 #editorjs {
   max-width: 100% !important;
   width: 100% !important;
-  padding: 0 1rem; /* Optional: adds some horizontal spacing */
+  padding: 0 1rem;
   box-sizing: border-box;
 }
 
-/* Override inner block styling if necessary */
 .ce-block {
   max-width: 100% !important;
 }
@@ -426,64 +425,89 @@ textarea::placeholder {
   width: 100% !important;
 }
 
-/* Ensure toolbar buttons are visible and positioned correctly */
 .ce-toolbar__plus,
 .ce-toolbar__settings-btn {
   position: relative;
   z-index: 10;
-  transform: scale(0.9); /* Optional: make it a bit smaller */
+  transform: scale(0.9);
   margin: 0 4px;
 }
 
-/* Optional: for small screens */
-@media (max-width: 650px) {
-  .ce-toolbar__content .ce-toolbar__plus,
-  .ce-toolbar__content .ce-toolbar__settings-btn {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    background-color: white;
-    border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    color: black !important;
-  }
-
-  .ce-toolbar__settings-btn {
-    right: 40px;
-  }
-}
-
-/* Allow horizontal scroll if needed */
 .ce-block {
   overflow-x: auto;
   position: relative;
 }
 
-/* Add enough padding to the editor to avoid layout breaking */
 #editorjs {
-  padding-bottom: 3rem; /* space for floating toolbar buttons */
+  padding-bottom: 3rem;
 }
+
 .codex-editor__redactor {
   padding-bottom: 0 !important;
 }
+
 .ce-block__content,
 .ce-toolbar__content,
 .codex-editor__redactor {
-  max-width: unset !important; /* or set to desired value, e.g., 100% */
+  max-width: unset !important;
 }
+
 .cdx-block {
   max-width: 100% !important;
 }
+
 .editor-wrapper {
   overflow-x: auto;
   padding: 16px;
 }
+
+/* Improved Mobile Styles for EditorJS */
 @media screen and (max-width: 650px) {
   .ce-paragraph[data-placeholder]:empty::before {
-    opacity: 1 !important; /* Adjust placeholder behavior */
+    opacity: 1 !important;
   }
+
+  /* Fixed toolbar buttons for mobile */
+  .ce-toolbar__actions {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+
   .ce-toolbar__plus,
   .ce-toolbar__settings-btn {
-    display: inline-block !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    color: white !important;
+    margin: 8px 0;
+    transform: scale(1);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .ce-toolbar__plus:hover,
+  .ce-toolbar__settings-btn:hover {
+    transform: scale(1.1);
+    background-color: var(--secondary);
+    color: white !important;
+  }
+
+  /* Adjust editor padding for mobile */
+  #editorjs {
+    padding-bottom: 100px; /* Extra space for floating toolbar */
+  }
+
+  /* Ensure content is readable on small screens */
+  .ce-block__content {
+    font-size: 16px;
+    line-height: 1.5;
   }
 }

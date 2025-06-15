@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -20,6 +20,33 @@ import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 
+// Memoized PostList component to prevent unnecessary re-renders
+const PostList = memo(
+  ({
+    posts,
+    lastPostElementRef,
+  }: {
+    posts: Post[];
+    lastPostElementRef: (node: HTMLDivElement | null) => void;
+  }) => (
+    <div className="d-flex flex-column gap-3">
+      {posts.map((post, index) => (
+        <Link key={post.id} href={`/post/${post.slug}`} passHref>
+          <Card
+            className="liquid-glass-card"
+            ref={index === posts.length - 1 ? lastPostElementRef : null}
+          >
+            <Card.Body>
+              <Card.Title as="h2">{post.title}</Card.Title>
+            </Card.Body>
+          </Card>
+        </Link>
+      ))}
+    </div>
+  )
+);
+PostList.displayName = "PostList";
+
 export default function HomePage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +54,6 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const lastPostRef = useRef<unknown>(null);
   const observer = useRef<IntersectionObserver | null>(null);
-  const scrollPositionRef = useRef<number>(0);
 
   const POSTS_PER_PAGE = 5;
 
@@ -55,12 +81,17 @@ export default function HomePage() {
         ...doc.data(),
       })) as Post[];
 
+      // Capture scroll position before updating state
+      const scrollY = window.scrollY;
       if (isInitial) {
         setPosts(fetchedPosts);
       } else {
-        // Store scroll position before updating posts
-        scrollPositionRef.current = window.scrollY;
+        // Append new posts without clearing existing ones
         setPosts((prev) => [...prev, ...fetchedPosts]);
+        // Restore scroll position immediately
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
       }
 
       if (snapshot.docs.length > 0) {
@@ -80,13 +111,6 @@ export default function HomePage() {
     fetchPosts(true);
   }, [fetchPosts]);
 
-  // Restore scroll position after posts are updated
-  useEffect(() => {
-    if (posts.length > POSTS_PER_PAGE) {
-      window.scrollTo(0, scrollPositionRef.current);
-    }
-  }, [posts]);
-
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (loading || !hasMore) return;
@@ -98,7 +122,7 @@ export default function HomePage() {
             fetchPosts();
           }
         },
-        { rootMargin: "200px" } // Trigger loading 200px before reaching the bottom
+        { rootMargin: "200px" }
       );
 
       if (node) observer.current.observe(node);
@@ -133,25 +157,13 @@ export default function HomePage() {
           </p>
         )}
 
-        {!loading && posts.length > 0 && (
-          <div className="d-flex flex-column gap-3">
-            {posts.map((post, index) => (
-              <Link key={post.id} href={`/post/${post.slug}`} passHref>
-                <Card
-                  className="liquid-glass-card"
-                  ref={index === posts.length - 1 ? lastPostElementRef : null}
-                >
-                  <Card.Body>
-                    <Card.Title as="h2">{post.title}</Card.Title>
-                  </Card.Body>
-                </Card>
-              </Link>
-            ))}
-            {hasMore && (
-              <div className="text-center mt-4" ref={lastPostElementRef}>
-                <Spinner animation="border" variant="primary" />
-              </div>
-            )}
+        {posts.length > 0 && (
+          <PostList posts={posts} lastPostElementRef={lastPostElementRef} />
+        )}
+
+        {hasMore && loading && posts.length > 0 && (
+          <div className="text-center mt-4">
+            <Spinner animation="border" variant="primary" />
           </div>
         )}
       </Container>

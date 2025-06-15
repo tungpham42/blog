@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  startAfter,
+  limit,
+} from "firebase/firestore";
 import { Post } from "@/lib/types";
 import Link from "next/link";
 import { Container, Card, Spinner, Alert } from "react-bootstrap";
@@ -17,27 +24,74 @@ export default function HomePage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const lastPostRef = useRef<unknown>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const POSTS_PER_PAGE = 5;
+
+  const fetchPosts = useCallback(async (isInitial = false) => {
+    try {
+      setLoading(true);
+      let q = query(
+        collection(db, "posts"),
+        orderBy("createdAt", "desc"),
+        limit(POSTS_PER_PAGE)
+      );
+
+      if (!isInitial && lastPostRef.current) {
+        q = query(
+          collection(db, "posts"),
+          orderBy("createdAt", "desc"),
+          startAfter(lastPostRef.current),
+          limit(POSTS_PER_PAGE)
+        );
+      }
+
+      const snapshot = await getDocs(q);
+      const fetchedPosts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Post[];
+
+      if (isInitial) {
+        setPosts(fetchedPosts);
+      } else {
+        setPosts((prev) => [...prev, ...fetchedPosts]);
+      }
+
+      if (snapshot.docs.length > 0) {
+        lastPostRef.current = snapshot.docs[snapshot.docs.length - 1];
+      }
+
+      setHasMore(snapshot.docs.length === POSTS_PER_PAGE);
+    } catch (err) {
+      console.error("Error fetching posts:", err);
+      setError("Oops! Something went wrong. Try again later.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-        const snapshot = await getDocs(q);
-        const fetchedPosts = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Post[];
-        setPosts(fetchedPosts);
-      } catch (err) {
-        console.error("Error fetching posts:", err);
-        setError("Oops! Something went wrong. Try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchPosts(true);
+  }, [fetchPosts]);
 
-    fetchPosts();
-  }, []);
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading || !hasMore) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          fetchPosts();
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore, fetchPosts]
+  );
 
   return (
     <Container fluid className="min-vh-100 py-5">
@@ -46,7 +100,7 @@ export default function HomePage() {
           <FontAwesomeIcon icon={faRocket} className="me-2" /> TechyTalks
         </h1>
 
-        {loading && (
+        {loading && posts.length === 0 && (
           <div className="text-center mt-5">
             <Spinner animation="border" variant="primary" />
           </div>
@@ -68,15 +122,24 @@ export default function HomePage() {
 
         {!loading && posts.length > 0 && (
           <div className="d-flex flex-column gap-3">
-            {posts.map((post) => (
+            {posts.map((post, index) => (
               <Link key={post.id} href={`/post/${post.slug}`} passHref>
-                <Card className="liquid-glass-card">
+                <Card
+                  className="liquid-glass-card"
+                  ref={index === posts.length - 1 ? lastPostElementRef : null}
+                >
                   <Card.Body>
                     <Card.Title as="h2">{post.title}</Card.Title>
                   </Card.Body>
                 </Card>
               </Link>
             ))}
+          </div>
+        )}
+
+        {loading && posts.length > 0 && (
+          <div className="text-center mt-4">
+            <Spinner animation="border" variant="primary" />
           </div>
         )}
       </Container>

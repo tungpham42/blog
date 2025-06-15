@@ -33,6 +33,7 @@ export default function EditPostPage() {
   const { slug } = useParams();
   const router = useRouter();
   const [title, setTitle] = useState("");
+  const [slugInput, setSlugInput] = useState("");
   const [content, setContent] = useState<OutputData | null>(null);
   const [docId, setDocId] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -49,6 +50,7 @@ export default function EditPostPage() {
           const data = doc.data();
           setDocId(doc.id);
           setTitle(data.title);
+          setSlugInput(data.slug);
           setContent(data.content);
         } else {
           setError("Post not found.");
@@ -64,6 +66,11 @@ export default function EditPostPage() {
     fetchPost();
   }, [slug, router]);
 
+  // Auto-generate slug when title changes
+  useEffect(() => {
+    setSlugInput(slugify(title));
+  }, [title]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content) {
@@ -71,19 +78,27 @@ export default function EditPostPage() {
       return;
     }
 
-    const newSlug = slugify(title);
-    const q = query(collection(db, "posts"), where("slug", "==", newSlug));
+    const formattedSlug = slugify(slugInput || title);
+    if (!formattedSlug) {
+      setError("Please provide a valid title or slug.");
+      return;
+    }
+
+    const q = query(
+      collection(db, "posts"),
+      where("slug", "==", formattedSlug)
+    );
     const querySnapshot = await getDocs(q);
     const slugExists = querySnapshot.docs.some((doc) => doc.id !== docId);
     if (slugExists) {
-      setError("A post with this title already exists.");
+      setError("A post with this slug already exists.");
       return;
     }
 
     try {
       await updateDoc(doc(db, "posts", docId), {
         title,
-        slug: newSlug,
+        slug: formattedSlug,
         content,
         updatedAt: Date.now(),
       });
@@ -139,16 +154,27 @@ export default function EditPostPage() {
         >
           <Card.Body className="p-4">
             <Card.Title as="h2" className="text-center mb-4">
-              <FontAwesomeIcon icon={faPencilAlt} className="me-2" /> Edit Your
-              Post
+              <FontAwesomeIcon icon={faPencilAlt} className="me-2" />
+              Edit Your Post
             </Card.Title>
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
               <Form.Control
                 type="text"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  setSlugInput(slugify(e.target.value));
+                }}
                 placeholder="Title"
+                required
+                className="mt-3 form-input-transparent"
+              />
+              <Form.Control
+                type="text"
+                value={slugInput}
+                onChange={(e) => setSlugInput(e.target.value)}
+                placeholder="Slug"
                 required
                 className="mt-3 form-input-transparent"
               />

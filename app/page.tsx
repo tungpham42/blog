@@ -27,6 +27,7 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const lastPostRef = useRef<unknown>(null);
   const observer = useRef<IntersectionObserver | null>(null);
+  const scrollPositionRef = useRef<number>(0);
 
   const POSTS_PER_PAGE = 5;
 
@@ -57,6 +58,8 @@ export default function HomePage() {
       if (isInitial) {
         setPosts(fetchedPosts);
       } else {
+        // Store scroll position before updating posts
+        scrollPositionRef.current = window.scrollY;
         setPosts((prev) => [...prev, ...fetchedPosts]);
       }
 
@@ -77,16 +80,26 @@ export default function HomePage() {
     fetchPosts(true);
   }, [fetchPosts]);
 
+  // Restore scroll position after posts are updated
+  useEffect(() => {
+    if (posts.length > POSTS_PER_PAGE) {
+      window.scrollTo(0, scrollPositionRef.current);
+    }
+  }, [posts]);
+
   const lastPostElementRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (loading || !hasMore) return;
       if (observer.current) observer.current.disconnect();
 
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          fetchPosts();
-        }
-      });
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            fetchPosts();
+          }
+        },
+        { rootMargin: "200px" } // Trigger loading 200px before reaching the bottom
+      );
 
       if (node) observer.current.observe(node);
     },
@@ -134,12 +147,11 @@ export default function HomePage() {
                 </Card>
               </Link>
             ))}
-          </div>
-        )}
-
-        {loading && posts.length > 0 && (
-          <div className="text-center mt-4">
-            <Spinner animation="border" variant="primary" />
+            {hasMore && (
+              <div className="text-center mt-4" ref={lastPostElementRef}>
+                <Spinner animation="border" variant="primary" />
+              </div>
+            )}
           </div>
         )}
       </Container>

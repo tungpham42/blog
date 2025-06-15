@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "Tung Blog - Login",
   description: "Blog của Tùng",
   openGraph: {
-    title: "Tung Blog",
+    title: "Tung Blog - Login",
     description: "Blog của Tùng",
     url: "https://blog.soft.io.vn/login",
     siteName: "Tung Blog",

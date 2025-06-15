@@ -23,7 +23,8 @@ export default function RequireAuth({ children }: RequireAuthProps) {
     }
   }, [user, loading, router]);
 
-  if (loading || isChecking) return <p>Checking authentication...</p>;
+  if (loading || isChecking)
+    return <div className="spinner-liquid-glass mx-auto"></div>;
   if (!user) return null;
 
   return <>{children}</>;

@@ -24,7 +24,8 @@ export default function RequireAuthAdmin({ children }: RequireAuthProps) {
     }
   }, [user, loading, router]);
 
-  if (loading || isChecking) return <p>Checking authentication...</p>;
+  if (loading || isChecking)
+    return <div className="spinner-liquid-glass mx-auto"></div>;
   if (!user || user.email !== "tung.42@gmail.com") return null;
 
   return <>{children}</>;

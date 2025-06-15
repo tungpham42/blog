@@ -11,6 +11,14 @@
   --blur: blur(14px);
 }
 
+::selection,
+.ce-block--selected .ce-block__content {
+  background: rgba(255, 255, 255, 0.25) !important; /* Frosty white glass */
+  color: #ffffff !important;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.6),
+    0 0 8px rgba(255, 255, 255, 0.3) !important;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: rgba(30, 30, 30, 0.15);
@@ -19,6 +27,12 @@
     --secondary: #90cdf4;
     --muted: #b7c7d1;
     --border: rgba(255, 255, 255, 0.25);
+  }
+  ::selection,
+  .ce-block--selected .ce-block__content {
+    background: rgba(0, 132, 255, 0.35) !important; /* Blue glassy hue */
+    color: #ffffff !important;
+    text-shadow: 0 0 6px rgba(0, 132, 255, 0.6), 0 0 12px rgba(0, 132, 255, 0.4) !important;
   }
 }
 
@@ -71,7 +85,7 @@ p,
 span,
 a,
 label,
-input,
+input:not(.cdx-search-field__input),
 textarea,
 select,
 button {
@@ -126,7 +140,7 @@ button:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
-input,
+input:not(.cdx-search-field__input),
 textarea,
 select {
   font: inherit;
@@ -140,7 +154,7 @@ select {
   transition: border 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-input:focus,
+input:not(.cdx-search-field__input):focus,
 textarea:focus,
 select:focus {
   outline: none;
@@ -271,9 +285,13 @@ select:focus {
   border: 1px solid var(--border) !important;
   backdrop-filter: var(--blur) saturate(180%) !important;
   -webkit-backdrop-filter: var(--blur) saturate(180%) !important;
-  border-radius: var(--radius) !important;
+  border-radius: var(--radius);
   color: var(--foreground);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+.alert {
+  border-radius: 8px !important;
 }
 
 .btn {
@@ -341,7 +359,7 @@ select:focus {
 
 .ce-toolbar__plus,
 .ce-toolbar__settings-btn,
-input::placeholder,
+input:not(.cdx-search-field__input)::placeholder,
 textarea::placeholder {
   color: var(--foreground) !important;
 }

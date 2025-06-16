@@ -12,12 +12,14 @@ import {
 } from "firebase/firestore";
 import { Post } from "@/lib/types";
 import Link from "next/link";
-import { Container, Card, Alert } from "react-bootstrap";
+import { Container, Card, Alert, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSadTear,
   faExclamationTriangle,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
+import SpotlightSearch from "@/components/SpotlightSearch";
 
 // Memoized PostList component to prevent unnecessary re-renders
 const PostList = memo(
@@ -51,6 +53,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const lastPostRef = useRef<unknown>(null);
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -129,10 +132,24 @@ export default function HomePage() {
     [loading, hasMore, fetchPosts]
   );
 
+  const handleSearchClick = useCallback(() => {
+    setIsSearchOpen(true);
+  }, []);
+
   return (
     <Container fluid className="min-vh-100 py-5">
+      <SpotlightSearch isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
       <Container className="py-5" style={{ maxWidth: "48rem" }}>
-        <h1 className="text-center mb-5 display-4 fw-bold">Techy Talks</h1>
+        <div className="d-flex justify-content-between align-items-center mb-5">
+          <h1 className="text-center display-4 fw-bold">Techy Talks</h1>
+          <Button
+            className="search-toggle"
+            onClick={handleSearchClick}
+            aria-label="Open search"
+          >
+            <FontAwesomeIcon icon={faSearch} />
+          </Button>
+        </div>
 
         {loading && posts.length === 0 && (
           <div className="text-center mt-5">

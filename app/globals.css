@@ -480,7 +480,46 @@ textarea::placeholder {
   padding: 16px;
 }
 
-/* Improved Mobile Styles for EditorJS */
+/* Spotlight Search Styles */
+.spotlight-search {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.spotlight-search .form-control {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: none;
+  padding: 1rem;
+  font-size: 1.2rem;
+  color: var(--foreground);
+  backdrop-filter: var(--blur) saturate(180%);
+  -webkit-backdrop-filter: var(--blur) saturate(180%);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.spotlight-search .form-control:focus {
+  background-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 0 0.2rem rgba(102, 217, 255, 0.35),
+    inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.spotlight-search .input-group-text {
+  background-color: transparent;
+  color: var(--foreground);
+  border: none !important;
+}
+
+/* Improved Mobile Styles for EditorJS and Spotlight */
 @media screen and (max-width: 650px) {
   .ce-paragraph[data-placeholder]:empty::before {
     opacity: 1 !important;
@@ -529,4 +568,85 @@ textarea::placeholder {
     font-size: 16px;
     line-height: 1.5;
   }
+
+  /* Spotlight mobile adjustments */
+  .spotlight-search {
+    max-width: 90% !important;
+  }
+
+  .spotlight-search .form-control {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+}
+
+.spotlight-search input {
+  text-shadow: none !important;
+}
+
+.list-group-item-action:not(.active):focus,
+.list-group-item-action:not(.active):hover {
+  color: var(--foreground) !important;
+}
+
+/* Spotlight Search unified input styles */
+.spotlight-search .input-group {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.spotlight-search .input-group-text,
+.spotlight-search .form-control {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: none !important;
+  color: var(--foreground);
+  backdrop-filter: var(--blur);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+}
+
+/* Specific styles for the icon container */
+.spotlight-search .input-group-text {
+  border: none !important;
+  border-top-left-radius: var(--radius) !important;
+  border-bottom-left-radius: var(--radius) !important;
+  min-width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+}
+
+/* Specific styles for the input field */
+.spotlight-search .form-control {
+  border-left: none !important;
+  border-top-right-radius: var(--radius) !important;
+  border-bottom-right-radius: var(--radius) !important;
+  box-shadow: none !important;
+  margin-left: 0 !important;
+  box-shadow: none !important;
+}
+
+.spotlight-search .form-control:hover,
+.spotlight-search .form-control:active,
+.spotlight-search .form-control:focus {
+  margin-left: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Focus state for both elements */
+.spotlight-search .input-group:focus-within .input-group-text,
+.spotlight-search .input-group:focus-within .form-control {
+  background-color: rgba(255, 255, 255, 0.18);
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove outline on focus */
+.spotlight-search .form-control:focus {
+  outline: none;
+  box-shadow: none !important;
 }
